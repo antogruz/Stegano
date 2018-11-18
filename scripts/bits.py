@@ -3,6 +3,9 @@ from struct import *
 def toint(bytes):
     return int.from_bytes(bytes, byteorder='big', signed = False)
 
+def tochar(bytes):
+    return chr(toint(bytes))
+
 def read_char(fh):
     return read(fh, "c", 1)
 

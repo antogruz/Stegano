@@ -11,6 +11,7 @@ class Parser:
     def __init__(self, fh):
         self.fh = fh
         self.d = {}
+        self.end = False
 
     def read_number(self, key, bytes_count):
         value = 0
@@ -19,14 +20,20 @@ class Parser:
         if bytes_count == 2:
             value = read_short(self.fh)
         if bytes_count == 1:
-            value = read_char(self.fh)
+            value = toint(read_char(self.fh))
         self.append(key, value)
 
     def read_string(self, key, bytes_count):
         value = ""
         for i in range(bytes_count):
-            value += str(read_char(self.fh))
+            value += (tochar(read_char(self.fh)))
         self.append(key, value)
+
+    def read_crc(self):
+        read_int(self.fh)
+
+    def skip(self, size):
+        self.fh.read(size)
 
     def check(self, key, bytes):
         for b in bytes:
@@ -43,6 +50,11 @@ def main():
         parser = Parser(fh)
         parser.check("signature", [137, 80, 78, 71, 13,10,26,10])
         parse_ihdr(parser)
+        if int(parser.d["colortype"]) == 3:
+            parse_palette(parser)
+
+        while not parser.end:
+            parse_chunk(parser)
 
 def parse_ihdr(p):
     p.read_number("sizeIHDR", 4)
@@ -56,6 +68,23 @@ def parse_ihdr(p):
     p.read_number("compression", 1)
     p.read_number("filter", 1)
     p.read_number("interlace", 1)
+    p.read_crc()
+
+def parse_palette(p):
+    p.read_number("sizePalette", 4)
+    p.check("typePLTE", ords(["P", "L", "T", "E"]))
+    colors = p.d["sizePalette"] / 3
+    for i in range(int(colors)):
+        p.skip(3)
+    p.read_crc()
+
+def parse_chunk(p):
+    p.read_number("sizeChunk", 4)
+    p.read_string("typeChunk", 4)
+    if p.d["typeChunk"] == "IEND":
+        p.end = True
+    p.skip(p.d["sizeChunk"])
+    p.read_crc()
 
 def ords(chars):
     return [ord(c) for c in chars]

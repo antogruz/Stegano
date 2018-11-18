@@ -1,5 +1,11 @@
 from struct import *
 
+def toint(bytes):
+    return int.from_bytes(bytes, byteorder='little', signed = False)
+
+def read_char(fh):
+    return unpack("c", fh.read(1))[0]
+
 def read_int(fh):
     return unpack("I", fh.read(4))[0]
 

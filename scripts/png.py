@@ -35,9 +35,9 @@ class Parser:
     def skip(self, size):
         self.fh.read(size)
 
-    def check(self, key, bytes):
+    def check(self, key, bytes, conv):
         for b in bytes:
-            assert_equals(b, toint(read_char(self.fh)))
+            assert_equals(b, conv(read_char(self.fh)))
 
     def append(self, key, value):
         self.d[key] = value
@@ -48,7 +48,7 @@ def main():
     file = sys.argv[1]
     with open(file, "rb") as fh:
         parser = Parser(fh)
-        parser.check("signature", [137, 80, 78, 71, 13,10,26,10])
+        parser.check("signature", [137, 80, 78, 71, 13,10,26,10], toint)
         parse_ihdr(parser)
         if int(parser.d["colortype"]) == 3:
             parse_palette(parser)
@@ -60,7 +60,7 @@ def parse_ihdr(p):
     p.read_number("sizeIHDR", 4)
     assert p.d["sizeIHDR"] == 13
 
-    p.check("typeIHDR", ords(['I', 'H', 'D', 'R']))
+    p.check("typeIHDR", ['I', 'H', 'D', 'R'], tochar)
     p.read_number("width", 4)
     p.read_number("height", 4)
     p.read_number("bitdepth", 1)
@@ -72,7 +72,7 @@ def parse_ihdr(p):
 
 def parse_palette(p):
     p.read_number("sizePalette", 4)
-    p.check("typePLTE", ords(["P", "L", "T", "E"]))
+    p.check("typePLTE", ["P", "L", "T", "E"], tochar)
     colors = p.d["sizePalette"] / 3
     for i in range(int(colors)):
         p.skip(3)
@@ -85,8 +85,5 @@ def parse_chunk(p):
         p.end = True
     p.skip(p.d["sizeChunk"])
     p.read_crc()
-
-def ords(chars):
-    return [ord(c) for c in chars]
 
 main()

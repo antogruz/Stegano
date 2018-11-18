@@ -4,13 +4,16 @@ def toint(bytes):
     return int.from_bytes(bytes, byteorder='little', signed = False)
 
 def read_char(fh):
-    return unpack("c", fh.read(1))[0]
+    return read(fh, "c", 1)
 
 def read_int(fh):
-    return unpack("I", fh.read(4))[0]
+    return read(fh, "I", 4)
 
 def read_short(fh):
-    return unpack("H", fh.read(2))[0]
+    return read(fh, "H", 2)
+
+def read(fh, code, size):
+    return unpack(code, fh.read(size))[0]
 
 def write_int(fh, i):
     fh.write(pack("I", i))

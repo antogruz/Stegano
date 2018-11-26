@@ -18,6 +18,9 @@ def read_short(fh):
 def read(fh, code, size):
     return unpack(">" + code, fh.read(size))[0]
 
+def write_byte(fh, b):
+    fh.write(pack("B", b))
+
 def write_int(fh, i):
     fh.write(pack("I", i))
 

@@ -20,11 +20,11 @@ class Parser:
             value = toint(read_char(self.fh))
         self.append(key, value)
 
-    def read_string(self, key, bytes_count):
+    def read_string(self, key, bytes_count, verbose=True):
         value = ""
         for i in range(bytes_count):
             value += (tochar(read_char(self.fh)))
-        self.append(key, value)
+        self.append(key, value, verbose)
 
     def skip(self, size):
         self.fh.read(size)
@@ -33,8 +33,9 @@ class Parser:
         for b in bytes:
             assert_equals(b, conv(read_char(self.fh)))
 
-    def append(self, key, value):
+    def append(self, key, value, verbose=True):
         self.d[key] = value
-        print(key, str(value))
+        if (verbose):
+            print(key, str(value))
 
 

@@ -10,6 +10,7 @@ class Picture:
         self.palette = []
         self.data = []
         self.end = []
+        self.texts = []
 
 def parse(fh):
     Parser(fh).check("signature", [137, 80, 78, 71, 13,10,26,10], toint)
@@ -63,6 +64,9 @@ def parse_chunk(fh, picture):
     elif type == "PLTE":
         p.d["colors"] = parse_palette(fh, size)
         picture.palette.append(p.d)
+    elif type == "tEXt":
+        p.read_string("text", size, verbose=False)
+        picture.texts.append(p.d)
     else:
         p.skip(size)
 

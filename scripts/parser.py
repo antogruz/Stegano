@@ -1,8 +1,5 @@
 from bits import *
-
-def assert_equals(expected, actual):
-    if expected != actual:
-        print("Expected to get", expected, "got", actual)
+from tests import assert_equals
 
 class Parser:
     def __init__(self, fh):

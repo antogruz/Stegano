@@ -1,0 +1,4 @@
+Le pass est 8397918 (rgb)
+Le pass est la valeur décimale de (0?) crc : 00 8729 7300 0000
+Fin du fichier : c'est le troisième leurre qui nous donne un nombre indéterminé (auquel on ajoute 7777777)
+

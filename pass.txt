@@ -1,0 +1,7 @@
+Voici comment trouver le pass : soit n le nombre de solutions entières (c'est-à-dire de solutions qui sont des nombres entiers) inférieures à un milliard de l'équation :
+
+(3x)^5 + (4x)^5 = (7x)^5
+
+où le symbole ^ veut dire "à la puissance". Rappel : les solutions x trouvées doivent être des nombres entiers.
+
+Vous voilà donc avec un nombre n, que vous multiplierez par le plus grand nombre de décimales de pi trouvées à ce jour. A ce nouveau nombre, vous ajouterez 7777777 et vous obtiendrez le pass.
